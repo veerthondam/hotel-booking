@@ -42,10 +42,25 @@ const login = async (req, res) => {
 
   const token = generateToken(user._id);
 
-  res.status(200).json({ token });
+  res.cookie("jwt", token, {
+   httpOnly: true, // Prevents JavaScript access to the cookie
+   secure: process.env.NODE_ENV === "development", // Use secure cookies in production
+   sameSite: "strict", // Protect against CSRF
+   maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  });
+
+  res.status(200).json({ success: true });
  } catch (error) {
   res.status(500).json({ message: "Server error" });
  }
 };
 
-module.exports = { signup, login };
+const logout = (req, res) => {
+ res.cookie("jwt", "", {
+  httpOnly: true,
+  expires: new Date(0),
+ });
+ res.status(200).json({ message: "Logged out successfully" });
+};
+
+module.exports = { signup, login, logout };
