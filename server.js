@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const hotelRoutes = require("./routes/hotelRoutes");
 
 dotenv.config();
 connectDB();
@@ -27,6 +28,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/hotels", hotelRoutes);
 
 const PORT = process.env.PORT || 5000;
 
